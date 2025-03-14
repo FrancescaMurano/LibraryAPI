@@ -81,7 +81,6 @@ public class TestBookController {
     @Test
     @Order(4)
     public void testUpdateBooks() throws Exception {
-
         Book book = new Book();
         book.setTitle(title);
         book.setAuthor("Santa Claus");
@@ -91,7 +90,6 @@ public class TestBookController {
                 .content(getJsonBook(book)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.author").value("Santa Claus"));
-
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/books"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].genre.name").value("HORROR"));
@@ -103,7 +101,6 @@ public class TestBookController {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/books/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/books"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
@@ -112,14 +109,11 @@ public class TestBookController {
     @Test
     @Order(6)
     public void testAddBookWithEmptyTitle() throws Exception {
-
         Book book = new Book();
         book.setTitle("");
         book.setAuthor("J.K. Rowling");
         book.setGenre(new Genre("FANTASY"));
-
         String jsonBook = getJsonBook(book);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/books")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBook))
