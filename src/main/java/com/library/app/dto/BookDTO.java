@@ -9,11 +9,8 @@ import jakarta.validation.constraints.Size;
 public class BookDTO {
 
     private Long id;
-
     private String title;
-
     private String author;
-
     private GenreDTO genre;
 
     public BookDTO() {
