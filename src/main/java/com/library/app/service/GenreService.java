@@ -16,5 +16,4 @@ public interface GenreService {
     ResponseDTO<GenreDTO> findById(Long id);
     ResponseDTO<List<GenreDTO>> findAll(Integer pageNumber, Integer pageSize);
     ResponseDTO<GenreDTO> deleteById(Long id);
-
 }
