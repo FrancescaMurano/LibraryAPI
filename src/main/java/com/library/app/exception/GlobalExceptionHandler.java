@@ -4,7 +4,6 @@ package com.library.app.exception;
  * Author: Francesca Murano
  */
 
-import com.library.app.dto.BookDTO;
 import com.library.app.dto.ResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;

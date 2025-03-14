@@ -2,13 +2,10 @@ package com.library.app;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.library.app.dto.BookDTO;
-import com.library.app.dto.GenreDTO;
 import com.library.app.entity.Book;
 import com.library.app.entity.Genre;
 import com.library.app.service.BookService;
 import com.library.app.service.GenreService;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
