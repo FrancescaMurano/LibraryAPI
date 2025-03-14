@@ -35,7 +35,6 @@ public class TestGenreController {
     public void testInsertGenre() throws Exception {
         Genre genre = new Genre("FANTASY");
         genre.setDescription("A genre of speculative fiction.");
-
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/genres")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(getJsonGenre(genre)))
@@ -68,7 +67,6 @@ public class TestGenreController {
                 .content(getJsonGenre(genre)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("HORROR"));
-
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/genres"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name").value("HORROR"));
@@ -80,7 +78,6 @@ public class TestGenreController {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/genres/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/genres"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
@@ -91,7 +88,6 @@ public class TestGenreController {
     public void testAddGenreWithEmptyName() throws Exception {
         Genre genre = new Genre("");
         String jsonBook = getJsonGenre(genre);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/genres")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBook))
