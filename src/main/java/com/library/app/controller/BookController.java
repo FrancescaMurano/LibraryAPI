@@ -6,7 +6,7 @@ package com.library.app.controller;
 
 import com.library.app.dto.BookDTO;
 import com.library.app.dto.ResponseDTO;
-import com.library.app.entity.Book;
+import com.library.app.mapper.BookMapper;
 import com.library.app.service.BookService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -21,10 +21,10 @@ import java.util.List;
 @RequestMapping("api/v1")
 public class BookController {
 
-    private BookService bookService;
+    private final BookService bookService;
 
     @Autowired
-    public BookController(BookService bookService){
+    public BookController(BookService bookService, BookMapper bookMapper){
         this.bookService = bookService;
     }
 
@@ -40,20 +40,19 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public ResponseEntity<ResponseDTO<BookDTO>> saveBook(@Valid @RequestBody Book book){
-        return ResponseEntity.ok(bookService.save(book));
+    public ResponseEntity<ResponseDTO<BookDTO>> saveBook(@Valid @RequestBody BookDTO bookDTO){
+        return ResponseEntity.ok(bookService.save(bookDTO));
 
     }
 
     @PutMapping("/books/{id}")
-    public ResponseEntity<ResponseDTO<BookDTO>> updateBook(@PathVariable Long id, @Valid @RequestBody Book book){
-        return ResponseEntity.ok(bookService.update(id,book));
+    public ResponseEntity<ResponseDTO<BookDTO>> updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO){
+        return ResponseEntity.ok(bookService.update(id, bookDTO));
 
     }
 
     @DeleteMapping("/books/{id}")
     public ResponseEntity<ResponseDTO<BookDTO>> deleteBook(@PathVariable Long id){
         return ResponseEntity.ok(bookService.deleteById(id));
-
     }
 }

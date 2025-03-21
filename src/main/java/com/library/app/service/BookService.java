@@ -10,8 +10,8 @@ import com.library.app.entity.Book;
 import java.util.List;
 
 public interface BookService {
-    ResponseDTO<BookDTO> save(Book book);
-    ResponseDTO<BookDTO> update(Long id, Book book);
+    ResponseDTO<BookDTO> save(BookDTO bookDTO);
+    ResponseDTO<BookDTO> update(Long id, BookDTO bookDTO);
     ResponseDTO<BookDTO> findById(Long id);
     ResponseDTO<List<BookDTO>> findAll(Integer page, Integer size);
     ResponseDTO<BookDTO> deleteById(Long id);

@@ -8,6 +8,7 @@ import com.library.app.dto.GenreDTO;
 import com.library.app.dto.ResponseDTO;
 import com.library.app.entity.Genre;
 import com.library.app.exception.DuplicateEntityException;
+import com.library.app.mapper.GenreMapper;
 import com.library.app.repository.GenreRepository;
 import com.library.app.service.GenreService;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,34 +25,34 @@ import java.util.Optional;
 @Service
 public class GenreServiceImpl implements GenreService {
 
-    private GenreRepository genreRepository;
+    private final GenreRepository genreRepository;
+    private final GenreMapper genreMapper;
 
     @Autowired
-    public GenreServiceImpl(GenreRepository genreRepository){
+    public GenreServiceImpl(GenreRepository genreRepository, GenreMapper genreMapper){
         this.genreRepository = genreRepository;
+        this.genreMapper = genreMapper;
     }
 
     @Transactional
     @Override
-    public ResponseDTO<GenreDTO> save(Genre genre) {
-        Optional<Genre> genreToCheck = genreRepository.findByName(genre.getName());
+    public ResponseDTO<GenreDTO> save(GenreDTO genreDTO) {
+        Optional<Genre> genreToCheck = genreRepository.findByName(genreDTO.getName());
         if(genreToCheck.isPresent())
             throw new DuplicateEntityException("Genre already exists!");
-        Genre genreSaved = genreRepository.save(genre);
-        GenreDTO genreDTO = new GenreDTO(genreSaved.getId(),genreSaved.getName(), genreSaved.getDescription());
-        return new ResponseDTO<>(true,null,genreDTO);
+        Genre savedGenre = genreRepository.save(genreMapper.toEntity(genreDTO));
+        return new ResponseDTO<>(true,null, genreMapper.toDTO(savedGenre));
     }
 
     @Transactional
     @Override
-    public ResponseDTO<GenreDTO> update(Long id, Genre genre) {
-        Optional<Genre> genreToCheck = genreRepository.findByName(genre.getName());
-        if(genreToCheck.isPresent() && !Objects.equals(id, genre.getId())) // check duplicates
+    public ResponseDTO<GenreDTO> update(Long id, GenreDTO genreDTO) {
+        Optional<Genre> genreToCheck = genreRepository.findByName(genreDTO.getName());
+        if(genreToCheck.isPresent() && !Objects.equals(id, genreDTO.getId())) // check duplicates
             throw new DuplicateEntityException("Genre already exists!");
-        genre.setId(id);
-        genreRepository.save(genre);
-        GenreDTO genreDTO = new GenreDTO(genre.getId(),genre.getName(), genre.getDescription());
-        return new ResponseDTO<>(true,"Genre "+ id + " updated!",genreDTO);
+        genreDTO.setId(id);
+        Genre savedGenre = genreRepository.save(genreMapper.toEntity(genreDTO));
+        return new ResponseDTO<>(true,"Genre "+ id + " updated!", genreMapper.toDTO(savedGenre));
     }
 
     @Override

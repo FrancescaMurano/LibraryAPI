@@ -10,8 +10,8 @@ import com.library.app.entity.Genre;
 import java.util.List;
 
 public interface GenreService {
-    ResponseDTO<GenreDTO> save(Genre genre);
-    ResponseDTO<GenreDTO> update(Long id, Genre genre);
+    ResponseDTO<GenreDTO> save(GenreDTO genreDTO);
+    ResponseDTO<GenreDTO> update(Long id, GenreDTO genreDTO);
     ResponseDTO<GenreDTO> findByName(String name);
     ResponseDTO<GenreDTO> findById(Long id);
     ResponseDTO<List<GenreDTO>> findAll(Integer pageNumber, Integer pageSize);
