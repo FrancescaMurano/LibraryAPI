@@ -1,16 +1,19 @@
-package com.library.app;
+package com.library.app.restcontroller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.library.app.dto.GenreDTO;
 import com.library.app.entity.Book;
 import com.library.app.entity.Genre;
 import com.library.app.service.BookService;
 import com.library.app.service.GenreService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -18,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestBookController {
@@ -42,9 +46,9 @@ public class TestBookController {
 
     @BeforeAll
     public void insertGenres(){
-        genreService.save(new Genre("HORROR"));
-        genreService.save(new Genre("FANTASY"));
-        genreService.save(new Genre("COMMEDY"));
+        genreService.save(new GenreDTO("HORROR"));
+        genreService.save(new GenreDTO("FANTASY"));
+        genreService.save(new GenreDTO("COMEDY"));
     }
 
     @Test

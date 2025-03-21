@@ -1,4 +1,4 @@
-package com.library.app;
+package com.library.app.restcontroller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,12 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestGenreController {
 
@@ -26,6 +29,9 @@ public class TestGenreController {
     @Autowired
     private ObjectMapper objectMapper;
 
+
+    private final String genreName = "Horror";
+
     private String getJsonGenre(Genre genre) throws JsonProcessingException {
         return objectMapper.writeValueAsString(genre);
     }
@@ -33,13 +39,13 @@ public class TestGenreController {
     @Test
     @Order(1)
     public void testInsertGenre() throws Exception {
-        Genre genre = new Genre("FANTASY");
+        Genre genre = new Genre(genreName);
         genre.setDescription("A genre of speculative fiction.");
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/genres")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(getJsonGenre(genre)))
                         .andExpect(MockMvcResultMatchers.status().isOk())
-                        .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("FANTASY"));
+                        .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value(genreName));
     }
 
     @Test
@@ -47,7 +53,7 @@ public class TestGenreController {
     public void testGetGenres() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/genres"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name").value("FANTASY"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name").value(genreName));
     }
 
     @Test
@@ -55,21 +61,21 @@ public class TestGenreController {
     public void testGetByIDGenres() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/genres/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("FANTASY"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value(genreName));
     }
 
     @Test
     @Order(4)
     public void testUpdateGenres() throws Exception {
-        Genre genre = new Genre("HORROR");
+        Genre genre = new Genre(genreName+"2");
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/genres/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getJsonGenre(genre)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("HORROR"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value(genreName+"2"));
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/genres"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name").value("HORROR"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name").value(genreName+"2"));
     }
 
     @Test
@@ -83,7 +89,7 @@ public class TestGenreController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
     }
 
-    @Test
+    @Test()
     @Order(6)
     public void testAddGenreWithEmptyName() throws Exception {
         Genre genre = new Genre("");
