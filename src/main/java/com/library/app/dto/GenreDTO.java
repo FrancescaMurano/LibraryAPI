@@ -5,12 +5,15 @@ package com.library.app.dto;
  */
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Size;
 
 public class GenreDTO {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id;
 
+    @Size(min = 1, max = 50, message = "Genre's name size must be between 1 and 50.")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
 
@@ -32,6 +35,15 @@ public class GenreDTO {
     }
 
     public GenreDTO(String name) {
+        this.name = name;
+    }
+
+    public GenreDTO(Long id) {
+        this.id = id;
+    }
+
+    public GenreDTO(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
 

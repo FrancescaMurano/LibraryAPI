@@ -15,15 +15,13 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 1, max = 50, message = "Book's title size must be between 1 and 50.")
     @Column(length = 50, nullable = false)
     private String title;
 
-    @Size(min=1, max = 50, message = "Book's author size must be between 1 and 50.")
     @Column(length = 50, nullable = false)
     private String author;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "genre_id")
     private Genre genre;
 

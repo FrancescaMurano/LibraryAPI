@@ -9,8 +9,13 @@ import jakarta.validation.constraints.Size;
 public class BookDTO {
 
     private Long id;
+
+    @Size(min = 1, max = 50, message = "Book's title size must be between 1 and 50.")
     private String title;
+
+    @Size(min=1, max = 50, message = "Book's author size must be between 1 and 50.")
     private String author;
+
     private GenreDTO genre;
 
     public BookDTO() {
