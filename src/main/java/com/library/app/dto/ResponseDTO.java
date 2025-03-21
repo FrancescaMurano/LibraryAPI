@@ -5,6 +5,8 @@ package com.library.app.dto;
  */
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 public class ResponseDTO<T> {
 
@@ -17,9 +19,11 @@ public class ResponseDTO<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
+    @Min(0)
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer pageNumber;
 
+    @Min(0) @Max(100)
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer pageSize;
 
