@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(jakarta.validation.ValidationException.class)
+    ResponseEntity<ResponseDTO<Object>> handleValidationException(jakarta.validation.ValidationException ex){
+        ResponseDTO<Object> response = new ResponseDTO<>(false, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ResponseDTO<Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
         ResponseDTO<Object> response = new ResponseDTO<>(false, ex.getMessage());
