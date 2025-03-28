@@ -5,7 +5,6 @@ package com.library.app.dto;
  */
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Size;
 
 public class GenreDTO {

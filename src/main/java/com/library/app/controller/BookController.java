@@ -42,13 +42,11 @@ public class BookController {
     @PostMapping("/books")
     public ResponseEntity<ResponseDTO<BookDTO>> saveBook(@Valid @RequestBody BookDTO bookDTO){
         return ResponseEntity.ok(bookService.save(bookDTO));
-
     }
 
     @PutMapping("/books/{id}")
     public ResponseEntity<ResponseDTO<BookDTO>> updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO){
         return ResponseEntity.ok(bookService.update(id, bookDTO));
-
     }
 
     @DeleteMapping("/books/{id}")

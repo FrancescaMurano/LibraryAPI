@@ -104,11 +104,5 @@ public class BookServiceImpl implements BookService {
             throw new EntityNotFoundException("This Genre doesn't exists.");
         return genreToFind.get();
     }
-    private Genre findGenre(long id){
-        Optional<Genre> genreToFind = genreRepository.findById(id);
-        if(genreToFind.isEmpty())
-            throw new EntityNotFoundException("This Genre doesn't exists.");
-
-        return genreToFind.get();
-    }
+   
 }

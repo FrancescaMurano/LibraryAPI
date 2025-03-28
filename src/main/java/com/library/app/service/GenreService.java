@@ -6,7 +6,6 @@ package com.library.app.service;
 
 import com.library.app.dto.GenreDTO;
 import com.library.app.dto.ResponseDTO;
-import com.library.app.entity.Genre;
 import java.util.List;
 
 public interface GenreService {

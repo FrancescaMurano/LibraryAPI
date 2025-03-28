@@ -6,7 +6,6 @@ package com.library.app.service;
 
 import com.library.app.dto.BookDTO;
 import com.library.app.dto.ResponseDTO;
-import com.library.app.entity.Book;
 import java.util.List;
 
 public interface BookService {
