@@ -27,9 +27,9 @@ public class AppApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		userRepository.save(new User("root", "$2a$12$TH59u6xE84rdOXV2DRczn.kq6zFc/RKKeZfHdAXdTUhg2rufAcb7.", Set.of(Role.ADMIN.getRoleName(), Role.USER.getRoleName())));
 		userRepository.save(new User("user", "$2a$12$TH59u6xE84rdOXV2DRczn.kq6zFc/RKKeZfHdAXdTUhg2rufAcb7.", Set.of(Role.USER.getRoleName())));
-		genreService.save(new GenreDTO("HORROR"));
-		genreService.save(new GenreDTO("DRAMA"));
-		genreService.save(new GenreDTO("ROMANTIC"));
-		genreService.save(new GenreDTO("COMEDY"));
+//		genreService.save(new GenreDTO("HORROR"));
+//		genreService.save(new GenreDTO("DRAMA"));
+//		genreService.save(new GenreDTO("ROMANTIC"));
+//		genreService.save(new GenreDTO("COMEDY"));
 	}
 }

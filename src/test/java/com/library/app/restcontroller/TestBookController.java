@@ -7,16 +7,17 @@ import com.library.app.entity.Book;
 import com.library.app.entity.Genre;
 import com.library.app.service.BookService;
 import com.library.app.service.GenreService;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import java.util.Base64;
 
 
 @SpringBootTest
@@ -39,6 +40,7 @@ public class TestBookController {
     private BookService bookService;
 
     private String title = "Harry Potter";
+    private String encodedAuth;
 
     private String getJsonBook(Book book) throws JsonProcessingException {
         return objectMapper.writeValueAsString(book);
@@ -46,6 +48,8 @@ public class TestBookController {
 
     @BeforeAll
     public void insertGenres(){
+        String auth = "root" + ":" + "root";
+        encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
         genreService.save(new GenreDTO("HORROR"));
         genreService.save(new GenreDTO("FANTASY"));
         genreService.save(new GenreDTO("COMEDY"));
@@ -60,6 +64,7 @@ public class TestBookController {
         book.setGenre(new Genre("FANTASY"));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/books")
+                            .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(getJsonBook(book)))
                         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -69,7 +74,9 @@ public class TestBookController {
     @Test
     @Order(2)
     public void testGetBooks() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/books"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/books")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
+                )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].title").value(title));
     }
@@ -77,7 +84,8 @@ public class TestBookController {
     @Test
     @Order(3)
     public void testGetByIDBooks() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/books/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/books/1")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.title").value(title));
     }
@@ -90,11 +98,13 @@ public class TestBookController {
         book.setAuthor("Santa Claus");
         book.setGenre(new Genre("HORROR"));
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/books/1")
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getJsonBook(book)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.author").value("Santa Claus"));
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/books"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/books")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].genre.name").value("HORROR"));
     }
@@ -103,9 +113,11 @@ public class TestBookController {
     @Order(5)
     public void testDeleteBooks() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/books/1")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/books"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/books")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
     }
@@ -119,6 +131,7 @@ public class TestBookController {
         book.setGenre(new Genre("FANTASY"));
         String jsonBook = getJsonBook(book);
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/books")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBook))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());

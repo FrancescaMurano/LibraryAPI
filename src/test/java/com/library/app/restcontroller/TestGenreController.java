@@ -2,19 +2,19 @@ package com.library.app.restcontroller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.library.app.entity.Book;
 import com.library.app.entity.Genre;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import java.util.Base64;
 
 
 @SpringBootTest
@@ -29,6 +29,12 @@ public class TestGenreController {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private final String credentials = "root" + ":" + "root";
+    private final String encodedAuth = Base64.getEncoder().encodeToString(credentials.getBytes());
+
+    private String getJsonBook(Book book) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(book);
+    }
 
     private final String genreName = "Horror";
 
@@ -42,6 +48,7 @@ public class TestGenreController {
         Genre genre = new Genre(genreName);
         genre.setDescription("A genre of speculative fiction.");
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/genres")
+                            .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(getJsonGenre(genre)))
                         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -51,7 +58,8 @@ public class TestGenreController {
     @Test
     @Order(2)
     public void testGetGenres() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/genres"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/genres")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name").value(genreName));
     }
@@ -59,7 +67,8 @@ public class TestGenreController {
     @Test
     @Order(3)
     public void testGetByIDGenres() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/genres/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/genres/1")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value(genreName));
     }
@@ -69,11 +78,13 @@ public class TestGenreController {
     public void testUpdateGenres() throws Exception {
         Genre genre = new Genre(genreName+"2");
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/genres/1")
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getJsonGenre(genre)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value(genreName+"2"));
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/genres"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/genres")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name").value(genreName+"2"));
     }
@@ -82,9 +93,11 @@ public class TestGenreController {
     @Order(5)
     public void testDeleteGenres() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/genres/1")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/genres"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/genres")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
     }
@@ -95,6 +108,7 @@ public class TestGenreController {
         Genre genre = new Genre("");
         String jsonBook = getJsonGenre(genre);
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/genres")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBook))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
